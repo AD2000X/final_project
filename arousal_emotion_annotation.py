@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 !pip install openai --quiet
 
 from google.colab import drive
