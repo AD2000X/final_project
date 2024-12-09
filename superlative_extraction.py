@@ -16,10 +16,10 @@ import stanza
 from google.colab import drive
 
 # NLTK downloads
+# nltk.download('inaugural')
 nltk.download('brown')
 nltk.download('gutenberg')
 nltk.download('webtext')
-nltk.download('inaugural')
 nltk.download('reuters')
 nltk.download('movie_reviews')
 nltk.download('averaged_perceptron_tagger')
@@ -33,11 +33,11 @@ drive.mount('/content/drive')
 # Example usage of corpora
 corpora = {
     "Brown": brown.sents(),
-    "Gutenberg": gutenberg.sents('austen-emma.txt'),
-    "Webtext": webtext.sents('firefox.txt'),
-    "Inaugural Address": inaugural.sents(),
+    "Gutenberg": gutenberg.sents(),
+    "Webtext": webtext.sents(),
     "Reuters": reuters.sents(),
     "Movie Reviews": movie_reviews.sents()
+    # "Inaugural Address": inaugural.sents()
 }
 
 for corpus_name, sentences in corpora.items():
