@@ -48,14 +48,14 @@ for corpus_name, sentences in corpora.items():
 # conll2000_sentences = conll2000.sents()
 # print("Conll2000 Corpus example sentence:", conll2000_sentences[0])
 
-"""# Standfor CoreNLP"""
+# """# Standfor CoreNLP"""
 
-# install Java
-!apt-get install -y openjdk-11-jdk
+# # install Java
+# !apt-get install -y openjdk-11-jdk
 
-# download and unzip Stanford CoreNLP
-!wget http://nlp.stanford.edu/software/stanford-corenlp-4.4.0.zip
-!unzip stanford-corenlp-4.4.0.zip
+# # download and unzip Stanford CoreNLP
+# !wget http://nlp.stanford.edu/software/stanford-corenlp-4.4.0.zip
+# !unzip stanford-corenlp-4.4.0.zip
 
 !pip install stanza
 
@@ -65,27 +65,27 @@ import stanza
 stanza.download('en')
 
 import os
-from subprocess import Popen, PIPE
-
-# set CoreNLP path
-path_to_corenlp = "/content/stanford-corenlp-4.4.0"
-
-# activate CoreNLP server
-corenlp_server = Popen(['java', '-mx4g', '-cp', f'{path_to_corenlp}/*', 'edu.stanford.nlp.pipeline.StanfordCoreNLPServer'],
-                        stdout=PIPE, stderr=PIPE)
+# from subprocess import Popen, PIPE
 
 # load stanza pipeline
 nlp = stanza.Pipeline('en', processors='tokenize,lemma,pos,depparse')
 
-# processing
-doc = nlp("Stanford University is located in California. It is a great university.")
+# # set CoreNLP path
+# path_to_corenlp = "/content/stanford-corenlp-4.4.0"
 
-# output
-for sentence in doc.sentences:
-    for word in sentence.words:
-        print(f'text: {word.text}\tlemma: {word.lemma}\tpos: {word.pos}\thead: {word.head}\tdeprel: {word.deprel}')
+# # activate CoreNLP server
+# corenlp_server = Popen(['java', '-mx4g', '-cp', f'{path_to_corenlp}/*', 'edu.stanford.nlp.pipeline.StanfordCoreNLPServer'],
+#                         stdout=PIPE, stderr=PIPE)
 
-corenlp_server.terminate()
+# # processing
+# doc = nlp("Stanford University is located in California. It is a great university.")
+
+# # output
+# for sentence in doc.sentences:
+#     for word in sentence.words:
+#         print(f'text: {word.text}\tlemma: {word.lemma}\tpos: {word.pos}\thead: {word.head}\tdeprel: {word.deprel}')
+
+# corenlp_server.terminate()
 
 """# Brown"""
 
