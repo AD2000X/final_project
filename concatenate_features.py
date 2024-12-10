@@ -446,76 +446,76 @@ df_4grams_syntactic.to_csv(output_path, index=False, encoding='utf-8')
 
 print(f"\nsaving to: {output_path}")
 
-# Commented out IPython magic to ensure Python compatibility.
-# %%time
-# 
-# n = int(4)
-# 
-# # generate dependency n-grams and count them
-# def generate_syntactic_ngrams(dep_tags, n):
-#     dep_ngrams = list(ngrams(dep_tags, n))
-#     return Counter(dep_ngrams)
-# 
-# # generate n-gram features for each headline
-# def add_syntactic_ngram_features(df, n):
-#     df[f'syntactic_{n}grams'] = df['dep_tags'].apply(lambda tags: generate_syntactic_ngrams(tags, n))
-#     return df
-# 
-# # expand n-gram features into separate columns
-# def expand_ngrams(df, n, prefix='syntactic'):
-#     ngram_col = f'{prefix}_{n}grams'
-#     all_ngrams = set(ngram for ngram_counter in df[ngram_col] for ngram in ngram_counter)
-#     new_columns = {f'{ngram_col}_{"_".join(ngram)}': df[ngram_col].apply(lambda x: x[ngram] if ngram in x else 0)
-#                    for ngram in all_ngrams}
-#     df = df.drop(columns=[ngram_col])
-#     df = pd.concat([df, pd.DataFrame(new_columns)], axis=1)
-#     return df
-# 
-# # generate and expand syntactic n-gram features
-# df_4grams_syntactic = add_syntactic_ngram_features(df_4grams_syntactic, n)
-# df_4grams_syntactic = expand_ngrams(df_4grams_syntactic, n)
-# 
-# # print the generated results
-# print(df_4grams_syntactic.head())
+Commented out IPython magic to ensure Python compatibility.
+%%time
 
-# Commented out IPython magic to ensure Python compatibility.
-# %%time
-# 
-# # save the merged data frame as a CSV file and specify the encoding as utf-8
-# output_path = f'{base_dir}/df_4grams_syntactic.csv'
-# df_4grams_syntactic.to_csv(output_path, index=False, encoding='utf-8')
+n = int(4)
+
+# generate dependency n-grams and count them
+def generate_syntactic_ngrams(dep_tags, n):
+    dep_ngrams = list(ngrams(dep_tags, n))
+    return Counter(dep_ngrams)
+
+# generate n-gram features for each headline
+def add_syntactic_ngram_features(df, n):
+    df[f'syntactic_{n}grams'] = df['dep_tags'].apply(lambda tags: generate_syntactic_ngrams(tags, n))
+    return df
+
+# expand n-gram features into separate columns
+def expand_ngrams(df, n, prefix='syntactic'):
+    ngram_col = f'{prefix}_{n}grams'
+    all_ngrams = set(ngram for ngram_counter in df[ngram_col] for ngram in ngram_counter)
+    new_columns = {f'{ngram_col}_{"_".join(ngram)}': df[ngram_col].apply(lambda x: x[ngram] if ngram in x else 0)
+                   for ngram in all_ngrams}
+    df = df.drop(columns=[ngram_col])
+    df = pd.concat([df, pd.DataFrame(new_columns)], axis=1)
+    return df
+
+# generate and expand syntactic n-gram features
+df_4grams_syntactic = add_syntactic_ngram_features(df_4grams_syntactic, n)
+df_4grams_syntactic = expand_ngrams(df_4grams_syntactic, n)
+
+# print the generated results
+print(df_4grams_syntactic.head())
+
+Commented out IPython magic to ensure Python compatibility.
+%%time
+
+# save the merged data frame as a CSV file and specify the encoding as utf-8
+output_path = f'{base_dir}/df_4grams_syntactic.csv'
+df_4grams_syntactic.to_csv(output_path, index=False, encoding='utf-8')
 
 """# Feature Selection"""
 
 # Commented out IPython magic to ensure Python compatibility.
-# %%time
-# 
-# # specify the home folder path
-# base_dir = '/content/drive/My Drive/training_0726'
-# 
-# # load the saved CSV file
-# df_4grams_syntactic = pd.read_csv(f'{base_dir}/df_4grams_syntactic.csv', encoding='utf-8')
-# 
-# # set features and target variables
-# X = df_4grams_syntactic
-# y = df_4grams_syntactic['sensation']
-# 
-# # define columns to exclude
-# exclude_columns = ['headline', 'clickbait', 'sensation_score',
-#                    'sensation_reason', 'emotion', 'arousal', 'arousal_score',
-#                    'arousal_reason', 'pos_tags', 'ner_tags', 'pos_features',
-#                    'ner_features', 'pos_freq', 'dep_tags', 'sensation']
-# 
-# # remove non-numeric columns and columns that need to be excluded
-# numeric_columns = X.select_dtypes(include=[np.number]).columns
-# valid_columns = [col for col in numeric_columns if col not in exclude_columns]
-# X_numeric = X[valid_columns]
-# 
-# print(f"Original number of features: {X.shape[1]}")
-# print(f"Number of numeric features: {len(numeric_columns)}")
-# print(f"The final number of features selected: {X_numeric.shape[1]}")
-# print("Partially selected features:")
-# print(list(X_numeric.columns)[:20])  # the first 20 feature names
+%%time
+
+# specify the home folder path
+base_dir = '/content/drive/My Drive/training_0726'
+
+# load the saved CSV file
+df_4grams_syntactic = pd.read_csv(f'{base_dir}/df_4grams_syntactic.csv', encoding='utf-8')
+
+# set features and target variables
+X = df_4grams_syntactic
+y = df_4grams_syntactic['sensation']
+
+# define columns to exclude
+exclude_columns = ['headline', 'clickbait', 'sensation_score',
+                   'sensation_reason', 'emotion', 'arousal', 'arousal_score',
+                   'arousal_reason', 'pos_tags', 'ner_tags', 'pos_features',
+                   'ner_features', 'pos_freq', 'dep_tags', 'sensation']
+
+# remove non-numeric columns and columns that need to be excluded
+numeric_columns = X.select_dtypes(include=[np.number]).columns
+valid_columns = [col for col in numeric_columns if col not in exclude_columns]
+X_numeric = X[valid_columns]
+
+print(f"Original number of features: {X.shape[1]}")
+print(f"Number of numeric features: {len(numeric_columns)}")
+print(f"The final number of features selected: {X_numeric.shape[1]}")
+print("Partially selected features:")
+print(list(X_numeric.columns)[:20])  # the first 20 feature names
 
 thresholds = [0.0001, 0.001, 0.01, 0.1]
 for threshold in thresholds:
@@ -524,242 +524,242 @@ for threshold in thresholds:
     print(f"Threshold: {threshold}, Features retained: {X_selected.shape[1]}")
 
 # Commented out IPython magic to ensure Python compatibility.
-# %%time
-# # save the excluded features
-# output_file = f'{base_dir}/selected_features.csv'
-# X_numeric.to_csv(output_file, index=False)
-# print(f"features saved to: {output_file}")
+%%time
+# save the excluded features
+output_file = f'{base_dir}/selected_features.csv'
+X_numeric.to_csv(output_file, index=False)
+print(f"features saved to: {output_file}")
 
-# # perform garbage collection
-# gc.collect()
+# perform garbage collection
+gc.collect()
 
-# # delete large objects that are no longer needed
-# del df_4grams_syntactic
-# del X
-# del X_numeric
-# gc.collect()
+# delete large objects that are no longer needed
+del df_4grams_syntactic
+del X
+del X_numeric
+gc.collect()
 
-# print("GC completed")
+print("GC completed")
 
 """## Filter"""
 
 # Commented out IPython magic to ensure Python compatibility.
-# %%time
-# 
-# # specify the home folder path
-# base_dir = '/content/drive/My Drive/training_0726'
-# 
-# def print_memory_usage():
-#     print(f"RAM usage: {psutil.virtual_memory().percent}%")
-# 
-# print_memory_usage()
-# 
-# # load the saved CSV file
-# X_numeric = pd.read_csv(f'{base_dir}/selected_features.csv', encoding='utf-8')
-# 
-# # read only the target variable
-# y = pd.read_csv(f'{base_dir}/df_4grams_syntactic.csv', usecols=['sensation'])['sensation']
-# 
-# print_memory_usage()
+%%time
+
+# specify the home folder path
+base_dir = '/content/drive/My Drive/training_0726'
+
+def print_memory_usage():
+    print(f"RAM usage: {psutil.virtual_memory().percent}%")
+
+print_memory_usage()
+
+# load the saved CSV file
+X_numeric = pd.read_csv(f'{base_dir}/selected_features.csv', encoding='utf-8')
+
+# read only the target variable
+y = pd.read_csv(f'{base_dir}/df_4grams_syntactic.csv', usecols=['sensation'])['sensation']
+
+print_memory_usage()
 
 # Commented out IPython magic to ensure Python compatibility.
-# %%time
-# def variance_threshold_selection(X, threshold=0.001):
-#     print("beging variance threshold filtering")
-#     var_selector = VarianceThreshold(threshold=threshold)
-#     var_selector.fit(X)
-#     var_mask = var_selector.get_support()
-#     var_features = X.columns[var_mask].tolist()
-# 
-#     print(f"Variance threshold screening is completed, the number of selected features：{len(var_features)}")
-#     print_memory_usage()
-# 
-#     return var_features
-# 
-# var_features = variance_threshold_selection(X_numeric)
-# 
-# # save features
-# output_file = f'{base_dir}/var_features.csv'
-# X_numeric[var_features].to_csv(output_file, index=False)
-# 
-# # save feature name
-# with open(f'{base_dir}/var_features.txt', 'w') as f:
-#     f.write('\n'.join(var_features))
-# 
-# print("variance threshold feature saved")
-# print_memory_usage()
-# 
-# del var_features
-# gc.collect()
+%%time
+def variance_threshold_selection(X, threshold=0.001):
+    print("beging variance threshold filtering")
+    var_selector = VarianceThreshold(threshold=threshold)
+    var_selector.fit(X)
+    var_mask = var_selector.get_support()
+    var_features = X.columns[var_mask].tolist()
+
+    print(f"Variance threshold screening is completed, the number of selected features：{len(var_features)}")
+    print_memory_usage()
+
+    return var_features
+
+var_features = variance_threshold_selection(X_numeric)
+
+# save features
+output_file = f'{base_dir}/var_features.csv'
+X_numeric[var_features].to_csv(output_file, index=False)
+
+# save feature name
+with open(f'{base_dir}/var_features.txt', 'w') as f:
+    f.write('\n'.join(var_features))
+
+print("variance threshold feature saved")
+print_memory_usage()
+
+del var_features
+gc.collect()
 
 """## Cuckoo Search via Lévy flights"""
 
 # Commented out IPython magic to ensure Python compatibility.
-# %%time
-# 
-# def print_memory_usage():
-#     print(f"RAM usage: {psutil.virtual_memory().percent}%")
-# 
-# # specify the home folder path
-# base_dir = '/content/drive/My Drive/training_0726'
-# 
-# # read variance threshold feature
-# with open(f'{base_dir}/var_features.txt', 'r') as f:
-#     var_features = [line.strip() for line in f]
-# 
-# # read selected_features.csv file
-# df_cuckoo = pd.read_csv(f'{base_dir}/var_features.csv', encoding='utf-8')
-# 
-# # select variance threshold features
-# df_cuckoo = df_cuckoo[var_features]
-# 
-# # check the original data frame
-# print("Original data frame information:")
-# print(f"Shape: {df_cuckoo.shape}")
-# print(f"Column name: {df_cuckoo.columns.tolist()}")
-# print("\nFirst few lines of data:")
-# print(df_cuckoo.head())
-# print("\nData type: ")
-# print(df_cuckoo.dtypes)
-# print("\nNon-null value statistics:")
-# print(df_cuckoo.notnull().sum())
-# 
+%%time
+
+def print_memory_usage():
+    print(f"RAM usage: {psutil.virtual_memory().percent}%")
+
+# specify the home folder path
+base_dir = '/content/drive/My Drive/training_0726'
+
+# read variance threshold feature
+with open(f'{base_dir}/var_features.txt', 'r') as f:
+    var_features = [line.strip() for line in f]
+
+# read selected_features.csv file
+df_cuckoo = pd.read_csv(f'{base_dir}/var_features.csv', encoding='utf-8')
+
+# select variance threshold features
+df_cuckoo = df_cuckoo[var_features]
+
+# check the original data frame
+print("Original data frame information:")
+print(f"Shape: {df_cuckoo.shape}")
+print(f"Column name: {df_cuckoo.columns.tolist()}")
+print("\nFirst few lines of data:")
+print(df_cuckoo.head())
+print("\nData type: ")
+print(df_cuckoo.dtypes)
+print("\nNon-null value statistics:")
+print(df_cuckoo.notnull().sum())
+
+print_memory_usage()
+
+# use df_cuckoo as feature set
+X = df_cuckoo
+y = pd.read_csv(f'{base_dir}/MIRUKU.csv', usecols=['sensation'])['sensation']
+
+print("Characteristic columns:", X.columns.tolist())
+print("Target variable:", y.name)
+print("Shape of X: ", X.shape)
+print("Shape of y:", y.shape)
+
+print(f"Number of processed features: {X.shape[1]}")
+
+print_memory_usage()
+
+# # clear variables
+# del var_features
+# gc.collect()
 # print_memory_usage()
-# 
-# # use df_cuckoo as feature set
-# X = df_cuckoo
-# y = pd.read_csv(f'{base_dir}/MIRUKU.csv', usecols=['sensation'])['sensation']
-# 
-# print("Characteristic columns:", X.columns.tolist())
-# print("Target variable:", y.name)
-# print("Shape of X: ", X.shape)
-# print("Shape of y:", y.shape)
-# 
-# print(f"Number of processed features: {X.shape[1]}")
-# 
+# del df_cuckoo
+# gc.collect()
 # print_memory_usage()
-# 
-# # # clear variables
-# # del var_features
-# # gc.collect()
-# # print_memory_usage()
-# # del df_cuckoo
-# # gc.collect()
-# # print_memory_usage()
 
 # Commented out IPython magic to ensure Python compatibility.
-# %%time
-# # Cuckoo Search
-# def levy_flight(beta=1.5):
-#     sigma = (math.gamma(1+beta) * math.sin(math.pi*beta/2) / (math.gamma((1+beta)/2) * beta * 2**((beta-1)/2)))**(1/beta)
-#     u = np.random.randn(1) * sigma
-#     v = np.random.randn(1)
-#     step = u / abs(v)**(1/beta)
-#     return step
-# 
-# def score_function(X, y):
-#     if X.shape[1] == 0:
-#         return 0
-#     clf = DecisionTreeClassifier(random_state=42)
-#     scores = cross_val_score(clf, X, y, cv=5)
-#     return np.mean(scores)
-# 
-# def cuckoo_search(X, y, n_nests=25, pa=0.25, n_iterations=100):
-#     n_features = X.shape[1]
-#     nests = np.random.randint(2, size=(n_nests, n_features))
-# 
-#     fitness = np.array([score_function(X.iloc[:, nest == 1], y) for nest in nests])
-#     best_nest = nests[np.argmax(fitness)]
-#     best_fitness = np.max(fitness)
-# 
-#     for _ in range(n_iterations):
-#         cuckoo = nests[np.random.randint(n_nests)].copy()
-#         cuckoo = np.random.randint(2, size=n_features)
-# 
-#         step_size = levy_flight()
-#         cuckoo = np.where(np.random.rand(n_features) < step_size, 1-cuckoo, cuckoo)
-# 
-#         j = np.random.randint(n_nests)
-#         if score_function(X.iloc[:, cuckoo == 1], y) > fitness[j]:
-#             nests[j] = cuckoo
-#             fitness[j] = score_function(X.iloc[:, cuckoo == 1], y)
-# 
-#         worst = np.argsort(fitness)[:int(n_nests*pa)]
-#         nests[worst] = np.random.randint(2, size=(len(worst), n_features))
-#         fitness[worst] = np.array([score_function(X.iloc[:, nest == 1], y) for nest in nests[worst]])
-# 
-#         if np.max(fitness) > best_fitness:
-#             best_fitness = np.max(fitness)
-#             best_nest = nests[np.argmax(fitness)]
-# 
-#     return best_nest, best_fitness
-# 
-# print("Running Cuckoo Search...")
-# best_features, best_fitness = cuckoo_search(X, y)
-# selected_features = X.columns[best_features == 1]
-# X_selected = X[selected_features]
-# 
-# print(f"The number of features selected by Cuckoo Search: {len(selected_features)}")
-# print(f"Best score obtained by Cuckoo Search: {best_fitness:.4f}")
-# 
+%%time
+# Cuckoo Search
+def levy_flight(beta=1.5):
+    sigma = (math.gamma(1+beta) * math.sin(math.pi*beta/2) / (math.gamma((1+beta)/2) * beta * 2**((beta-1)/2)))**(1/beta)
+    u = np.random.randn(1) * sigma
+    v = np.random.randn(1)
+    step = u / abs(v)**(1/beta)
+    return step
+
+def score_function(X, y):
+    if X.shape[1] == 0:
+        return 0
+    clf = DecisionTreeClassifier(random_state=42)
+    scores = cross_val_score(clf, X, y, cv=5)
+    return np.mean(scores)
+
+def cuckoo_search(X, y, n_nests=25, pa=0.25, n_iterations=100):
+    n_features = X.shape[1]
+    nests = np.random.randint(2, size=(n_nests, n_features))
+
+    fitness = np.array([score_function(X.iloc[:, nest == 1], y) for nest in nests])
+    best_nest = nests[np.argmax(fitness)]
+    best_fitness = np.max(fitness)
+
+    for _ in range(n_iterations):
+        cuckoo = nests[np.random.randint(n_nests)].copy()
+        cuckoo = np.random.randint(2, size=n_features)
+
+        step_size = levy_flight()
+        cuckoo = np.where(np.random.rand(n_features) < step_size, 1-cuckoo, cuckoo)
+
+        j = np.random.randint(n_nests)
+        if score_function(X.iloc[:, cuckoo == 1], y) > fitness[j]:
+            nests[j] = cuckoo
+            fitness[j] = score_function(X.iloc[:, cuckoo == 1], y)
+
+        worst = np.argsort(fitness)[:int(n_nests*pa)]
+        nests[worst] = np.random.randint(2, size=(len(worst), n_features))
+        fitness[worst] = np.array([score_function(X.iloc[:, nest == 1], y) for nest in nests[worst]])
+
+        if np.max(fitness) > best_fitness:
+            best_fitness = np.max(fitness)
+            best_nest = nests[np.argmax(fitness)]
+
+    return best_nest, best_fitness
+
+print("Running Cuckoo Search...")
+best_features, best_fitness = cuckoo_search(X, y)
+selected_features = X.columns[best_features == 1]
+X_selected = X[selected_features]
+
+print(f"The number of features selected by Cuckoo Search: {len(selected_features)}")
+print(f"Best score obtained by Cuckoo Search: {best_fitness:.4f}")
+
+print_memory_usage()
+
+# # clear variables
+# del best_features, best_fitness
+# gc.collect()
 # print_memory_usage()
-# 
-# # # clear variables
-# # del best_features, best_fitness
-# # gc.collect()
-# # print_memory_usage()
 
 # Commented out IPython magic to ensure Python compatibility.
-# %%time
-# # print selected features
-# print("\nSelected features:")
-# for feature in selected_features:
-#     print(feature)
-# 
-# # create a DataFrame to display the selected features and their index in the original feature set
-# df_selected_features = pd.DataFrame({
-#     'Feature': selected_features,
-#     'Index': [list(X.columns).index(feature) for feature in selected_features]
-# })
-# df_selected_features = df_selected_features.sort_values('Index')
-# 
-# print("\nSelected features with their indices in the original feature set:")
-# print(df_selected_features.to_string(index=False))
-# 
-# # visualize selected features
-# plt.figure(figsize=(10, 6))
-# plt.bar(range(len(selected_features)), [1]*len(selected_features))
-# plt.xlabel('Feature Index')
-# plt.ylabel('Selected (1) / Not Selected (0)')
-# plt.title('Features Selected by Cuckoo Search')
-# plt.xticks(range(len(selected_features)), df_selected_features['Index'], rotation=90)
-# plt.tight_layout()
-# plt.show()
-# 
-# # print statistics for selected features
-# print("\nStatistics of selected features:")
-# print(X_selected.describe())
-# 
+%%time
+# print selected features
+print("\nSelected features:")
+for feature in selected_features:
+    print(feature)
+
+# create a DataFrame to display the selected features and their index in the original feature set
+df_selected_features = pd.DataFrame({
+    'Feature': selected_features,
+    'Index': [list(X.columns).index(feature) for feature in selected_features]
+})
+df_selected_features = df_selected_features.sort_values('Index')
+
+print("\nSelected features with their indices in the original feature set:")
+print(df_selected_features.to_string(index=False))
+
+# visualize selected features
+plt.figure(figsize=(10, 6))
+plt.bar(range(len(selected_features)), [1]*len(selected_features))
+plt.xlabel('Feature Index')
+plt.ylabel('Selected (1) / Not Selected (0)')
+plt.title('Features Selected by Cuckoo Search')
+plt.xticks(range(len(selected_features)), df_selected_features['Index'], rotation=90)
+plt.tight_layout()
+plt.show()
+
+# print statistics for selected features
+print("\nStatistics of selected features:")
+print(X_selected.describe())
+
+print_memory_usage()
+
+# # clear variables
+# plt.close()
+# del selected_features, X_selected
+# gc.collect()
 # print_memory_usage()
-# 
-# # # clear variables
-# # plt.close()
-# # del selected_features, X_selected
-# # gc.collect()
-# # print_memory_usage()
 
 # Commented out IPython magic to ensure Python compatibility.
-# %%time
-# # save the merged data frame as a CSV file and specify the encoding as utf-8
-# output_path = f'{base_dir}/df_selected_features.csv'
-# df_selected_features.to_csv(output_path, index=False, encoding='utf-8')
-# 
+%%time
+# save the merged data frame as a CSV file and specify the encoding as utf-8
+output_path = f'{base_dir}/df_selected_features.csv'
+df_selected_features.to_csv(output_path, index=False, encoding='utf-8')
+
+print_memory_usage()
+
+# # clear variables
+# del X, y, X_selected, df_selected_features
+# gc.collect()
 # print_memory_usage()
-# 
-# # # clear variables
-# # del X, y, X_selected, df_selected_features
-# # gc.collect()
-# # print_memory_usage()
 
 """# Threshold
 
@@ -1159,50 +1159,50 @@ def prepare_data():
     return X_train_processed, X_val_processed, X_test_processed, y_train_processed, y_val, y_test, preprocessor
 
 # Commented out IPython magic to ensure Python compatibility.
-# %%time
-# 
-# # prepare data
-# X_train, X_val, X_test, y_train, y_val, y_test, preprocessor = prepare_data()
-# 
-# # XGBoost
-# xgb_classifier = xgb.XGBClassifier(use_label_encoder=False, eval_metric='logloss')
-# 
-# param_dist_xgb = {
-#     'max_depth': [3, 6, 9],
-#     'min_child_weight': [1, 3],
-#     'n_estimators': [100, 300, 500],
-#     'learning_rate': [0.01, 0.1, 0.3],
-#     'subsample': [0.8, 1.0],
-#     'colsample_bytree': [0.8, 1.0],
-#     'gamma': [0, 0.1]
-# }
-# 
-# kfold = KFold(n_splits=5, shuffle=True, random_state=42)
-# 
-# random_search_xg = RandomizedSearchCV(
-#     estimator=xgb_classifier,
-#     param_distributions=param_dist_xgb,
-#     n_iter=100,
-#     cv=kfold,
-#     n_jobs=-1,
-#     verbose=2,
-#     scoring='f1',
-#     random_state=42
-# )
-# 
-# # fitting on preprocessed training data
-# random_search_xg.fit(X_train, y_train)
-# 
-# print("best parameters:", random_search_xg.best_params_)
-# print("best cross-validation score:", random_search_xg.best_score_)
-# 
-# # use the best model for predictions
-# best_model = random_search_xg.best_estimator_
-# y_val_pred = best_model.predict(X_val)
-# 
-# # classification report
-# print("\nclassification report:")
-# print(classification_report(y_val, y_val_pred))
+%%time
+
+# prepare data
+X_train, X_val, X_test, y_train, y_val, y_test, preprocessor = prepare_data()
+
+# XGBoost
+xgb_classifier = xgb.XGBClassifier(use_label_encoder=False, eval_metric='logloss')
+
+param_dist_xgb = {
+    'max_depth': [3, 6, 9],
+    'min_child_weight': [1, 3],
+    'n_estimators': [100, 300, 500],
+    'learning_rate': [0.01, 0.1, 0.3],
+    'subsample': [0.8, 1.0],
+    'colsample_bytree': [0.8, 1.0],
+    'gamma': [0, 0.1]
+}
+
+kfold = KFold(n_splits=5, shuffle=True, random_state=42)
+
+random_search_xg = RandomizedSearchCV(
+    estimator=xgb_classifier,
+    param_distributions=param_dist_xgb,
+    n_iter=100,
+    cv=kfold,
+    n_jobs=-1,
+    verbose=2,
+    scoring='f1',
+    random_state=42
+)
+
+# fitting on preprocessed training data
+random_search_xg.fit(X_train, y_train)
+
+print("best parameters:", random_search_xg.best_params_)
+print("best cross-validation score:", random_search_xg.best_score_)
+
+# use the best model for predictions
+best_model = random_search_xg.best_estimator_
+y_val_pred = best_model.predict(X_val)
+
+# classification report
+print("\nclassification report:")
+print(classification_report(y_val, y_val_pred))
 
 """### ROC AUC"""
 
@@ -1548,67 +1548,67 @@ def prepare_data():
 
     return X_train_processed, X_val_processed, X_test_processed, y_train_processed, y_val, y_test, preprocessor
 
-# Commented out IPython magic to ensure Python compatibility.
-# %%time
+Commented out IPython magic to ensure Python compatibility.
+%%time
+
+# prepare data
+X_train, X_val, X_test, y_train, y_val, y_test, preprocessor = prepare_data()
+
+# XGBoost
+xgb_classifier = xgb.XGBClassifier(use_label_encoder=False, eval_metric='logloss')
+
+param_dist_xgb = {
+    'max_depth': [3, 6, 9],
+    'min_child_weight': [1, 3],
+    'n_estimators': [100, 300, 500],
+    'learning_rate': [0.01, 0.1, 0.3],
+    'subsample': [0.8, 1.0],
+    'colsample_bytree': [0.8, 1.0],
+    'gamma': [0, 0.1]
+}
 # 
-# # prepare data
-# X_train, X_val, X_test, y_train, y_val, y_test, preprocessor = prepare_data()
-# 
-# # XGBoost
-# xgb_classifier = xgb.XGBClassifier(use_label_encoder=False, eval_metric='logloss')
-# 
-# param_dist_xgb = {
-#     'max_depth': [3, 6, 9],
-#     'min_child_weight': [1, 3],
-#     'n_estimators': [100, 300, 500],
-#     'learning_rate': [0.01, 0.1, 0.3],
-#     'subsample': [0.8, 1.0],
-#     'colsample_bytree': [0.8, 1.0],
-#     'gamma': [0, 0.1]
-# }
-# 
-# kfold = KFold(n_splits=5, shuffle=True, random_state=42)
-# 
-# random_search_xg = RandomizedSearchCV(
-#     estimator=xgb_classifier,
-#     param_distributions=param_dist_xgb,
-#     n_iter=100,
-#     cv=kfold,
-#     n_jobs=-1,
-#     verbose=2,
-#     scoring='f1',
-#     random_state=42
-# )
-# 
-# # fitting on preprocessed training data
-# random_search_xg.fit(X_train, y_train)
-# 
-# print("best parameters:", random_search_xg.best_params_)
-# print("best cross-validation score:", random_search_xg.best_score_)
-# 
-# # use the best model for predictions
-# best_model = random_search_xg.best_estimator_
-# # y_val_pred = best_model.predict(X_val)
-# 
-# # # classification report
-# # print("\nclassification report:")
-# # print(classification_report(y_val, y_val_pred))
-# 
-# # load the custom threshold
-# base_dir = '/content/drive/My Drive/training_0726'
-# optimal_threshold = joblib.load(f'{base_dir}/XGoptimal_threshold.joblib')
-# 
-# # use the optimal threshold
-# y_val_pred_proba = best_model.predict_proba(X_val)[:, 1]
-# y_val_pred = (y_val_pred_proba >= optimal_threshold).astype(int)
-# print(f"\nValidation set classification report using optimal threshold ({optimal_threshold:.4f}):")
-# print(classification_report(y_val, y_val_pred))
-# 
-# # # predict on test set
-# # y_test_pred_proba = best_model.predict_proba(X_test)[:, 1]
-# # y_test_pred = (y_test_pred_proba >= optimal_threshold).astype(int)
-# # print(f"\nTest set classification report using optimal threshold ({optimal_threshold:.4f}):")
-# # print(classification_report(y_test, y_test_pred))
+kfold = KFold(n_splits=5, shuffle=True, random_state=42)
+
+random_search_xg = RandomizedSearchCV(
+    estimator=xgb_classifier,
+    param_distributions=param_dist_xgb,
+    n_iter=100,
+    cv=kfold,
+    n_jobs=-1,
+    verbose=2,
+    scoring='f1',
+    random_state=42
+)
+
+# fitting on preprocessed training data
+random_search_xg.fit(X_train, y_train)
+
+print("best parameters:", random_search_xg.best_params_)
+print("best cross-validation score:", random_search_xg.best_score_)
+
+# use the best model for predictions
+best_model = random_search_xg.best_estimator_
+y_val_pred = best_model.predict(X_val)
+
+# classification report
+print("\nclassification report:")
+print(classification_report(y_val, y_val_pred))
+
+# load the custom threshold
+base_dir = '/content/drive/My Drive/training_0726'
+optimal_threshold = joblib.load(f'{base_dir}/XGoptimal_threshold.joblib')
+
+# use the optimal threshold
+y_val_pred_proba = best_model.predict_proba(X_val)[:, 1]
+y_val_pred = (y_val_pred_proba >= optimal_threshold).astype(int)
+print(f"\nValidation set classification report using optimal threshold ({optimal_threshold:.4f}):")
+print(classification_report(y_val, y_val_pred))
+
+# predict on test set
+y_test_pred_proba = best_model.predict_proba(X_test)[:, 1]
+y_test_pred = (y_test_pred_proba >= optimal_threshold).astype(int)
+print(f"\nTest set classification report using optimal threshold ({optimal_threshold:.4f}):")
+print(classification_report(y_test, y_test_pred))
 
 """### ROC AUC"""
 
@@ -1939,50 +1939,50 @@ def prepare_data():
     return X_train_processed, X_val_processed, X_test_processed, y_train_processed, y_val, y_test, preprocessor
 
 # Commented out IPython magic to ensure Python compatibility.
-# %%time
-# # prepare data
-# X_train, X_val, X_test, y_train, y_val, y_test, preprocessor = prepare_data()
-# 
-# # AdaBoost
-# base_estimator = DecisionTreeClassifier()
-# adaboost_classifier = AdaBoostClassifier(base_estimator=base_estimator, random_state=42)
-# 
-# param_dist_ada = {
-#     'n_estimators': [100, 300, 500],
-#     'learning_rate': [0.01, 0.1, 0.3],
-#     'base_estimator__max_depth': [3, 6, 9],
-#     'base_estimator__min_weight_fraction_leaf': [0, 0.1],  # similar to min_child_weight
-#     'base_estimator__max_features': [0.8, 1.0],  # similar to colsample_bytree
-#     'algorithm': ['SAMME', 'SAMME.R']  # AdaBoost specific parameters
-# }
-# 
-# # Randomized Search CV
-# kfold = KFold(n_splits=5, shuffle=True, random_state=42)
-# 
-# random_search_ada = RandomizedSearchCV(
-#     estimator=adaboost_classifier,
-#     param_distributions=param_dist_ada,
-#     n_iter=100,
-#     cv=kfold,
-#     n_jobs=-1,
-#     verbose=2,
-#     scoring='f1',
-#     random_state=42
-# )
-# 
-# # fitting on preprocessed training data
-# random_search_ada.fit(X_train, y_train)
-# 
-# print("best parameters:", random_search_ada.best_params_)
-# print("best cross-validation score:", random_search_ada.best_score_)
-# 
-# # use the best model for predictions
-# best_model = random_search_ada.best_estimator_
-# y_val_pred = best_model.predict(X_val)
-# 
-# # classification report
-# print("\nvalidation set classification report:")
-# print(classification_report(y_val, y_val_pred))
+%%time
+# prepare data
+X_train, X_val, X_test, y_train, y_val, y_test, preprocessor = prepare_data()
+
+# AdaBoost
+base_estimator = DecisionTreeClassifier()
+adaboost_classifier = AdaBoostClassifier(base_estimator=base_estimator, random_state=42)
+
+param_dist_ada = {
+    'n_estimators': [100, 300, 500],
+    'learning_rate': [0.01, 0.1, 0.3],
+    'base_estimator__max_depth': [3, 6, 9],
+    'base_estimator__min_weight_fraction_leaf': [0, 0.1],  # similar to min_child_weight
+    'base_estimator__max_features': [0.8, 1.0],  # similar to colsample_bytree
+    'algorithm': ['SAMME', 'SAMME.R']  # AdaBoost specific parameters
+}
+
+# Randomized Search CV
+kfold = KFold(n_splits=5, shuffle=True, random_state=42)
+
+random_search_ada = RandomizedSearchCV(
+    estimator=adaboost_classifier,
+    param_distributions=param_dist_ada,
+    n_iter=100,
+    cv=kfold,
+    n_jobs=-1,
+    verbose=2,
+    scoring='f1',
+    random_state=42
+)
+
+# fitting on preprocessed training data
+random_search_ada.fit(X_train, y_train)
+
+print("best parameters:", random_search_ada.best_params_)
+print("best cross-validation score:", random_search_ada.best_score_)
+
+# use the best model for predictions
+best_model = random_search_ada.best_estimator_
+y_val_pred = best_model.predict(X_val)
+
+# classification report
+print("\nvalidation set classification report:")
+print(classification_report(y_val, y_val_pred))
 
 """### ROC AUC"""
 
@@ -2107,49 +2107,49 @@ def prepare_data():
     return X_train_processed, X_val_processed, X_test_processed, y_train_processed, y_val, y_test, preprocessor
 
 # Commented out IPython magic to ensure Python compatibility.
-# %%time
-# X_train, X_val, X_test, y_train, y_val, y_test, preprocessor = prepare_data()
+%%time
+X_train, X_val, X_test, y_train, y_val, y_test, preprocessor = prepare_data()
+
+# CatBoost
+catboost_classifier = CatBoostClassifier(random_state=42, verbose=False)
+
+param_dist_cat = {
+    'iterations': [100, 300, 500],  # n_estimators
+    'learning_rate': [0.01, 0.1, 0.3],
+    'depth': [3, 6, 9],  # max_depth
+    'l2_leaf_reg': [1, 3],  # similar to min_child_weight
+    'subsample': [0.8, 1.0],
+    'colsample_bylevel': [0.8, 1.0],  # similar to colsample_bytree
+    'random_strength': [0, 0.1]  # similar to gamma
+}
+
+# Randomized Search CV
+kfold = KFold(n_splits=5, shuffle=True, random_state=42)
+
+random_search_cat = RandomizedSearchCV(
+    estimator=catboost_classifier,
+    param_distributions=param_dist_cat,
+    n_iter=100,
+    cv=kfold,
+    n_jobs=-1,
+    verbose=2,
+    scoring='f1',
+    random_state=42
+)
 # 
-# # CatBoost
-# catboost_classifier = CatBoostClassifier(random_state=42, verbose=False)
-# 
-# param_dist_cat = {
-#     'iterations': [100, 300, 500],  # n_estimators
-#     'learning_rate': [0.01, 0.1, 0.3],
-#     'depth': [3, 6, 9],  # max_depth
-#     'l2_leaf_reg': [1, 3],  # similar to min_child_weight
-#     'subsample': [0.8, 1.0],
-#     'colsample_bylevel': [0.8, 1.0],  # similar to colsample_bytree
-#     'random_strength': [0, 0.1]  # similar to gamma
-# }
-# 
-# # Randomized Search CV
-# kfold = KFold(n_splits=5, shuffle=True, random_state=42)
-# 
-# random_search_cat = RandomizedSearchCV(
-#     estimator=catboost_classifier,
-#     param_distributions=param_dist_cat,
-#     n_iter=100,
-#     cv=kfold,
-#     n_jobs=-1,
-#     verbose=2,
-#     scoring='f1',
-#     random_state=42
-# )
-# 
-# # fitting on preprocessed training data
-# random_search_cat.fit(X_train, y_train)
-# 
-# print("best parameters:", random_search_cat.best_params_)
-# print("best cross-validation score:", random_search_cat.best_score_)
-# 
-# # use the best model for predictions
-# best_model = random_search_cat.best_estimator_
-# y_val_pred = best_model.predict(X_val)
-# 
-# # print classification report
-# print("\nvalidation set classification report:")
-# print(classification_report(y_val, y_val_pred))
+# fitting on preprocessed training data
+random_search_cat.fit(X_train, y_train)
+
+print("best parameters:", random_search_cat.best_params_)
+print("best cross-validation score:", random_search_cat.best_score_)
+
+# use the best model for predictions
+best_model = random_search_cat.best_estimator_
+y_val_pred = best_model.predict(X_val)
+
+# print classification report
+print("\nvalidation set classification report:")
+print(classification_report(y_val, y_val_pred))
 
 """### ROC AUC"""
 
@@ -2274,48 +2274,48 @@ def prepare_data():
     return X_train_processed, X_val_processed, X_test_processed, y_train_processed, y_val, y_test, preprocessor
 
 # Commented out IPython magic to ensure Python compatibility.
-# %%time
-# X_train, X_val, X_test, y_train, y_val, y_test, preprocessor = prepare_data()
-# 
-# # Random Forest
-# rf_classifier = RandomForestClassifier(random_state=42)
-# 
-# param_dist_rf = {
-#     'n_estimators': [100, 300, 500],
-#     'max_depth': [3, 6, 9],
-#     'min_samples_leaf': [1, 3],  # similar to min_child_weight
-#     'max_features': [0.8, 1.0],  # similar to colsample_bytree
-#     'bootstrap': [True, False],  # similar to subsample
-#     'min_impurity_decrease': [0, 0.1]  # similar to gamma
-# }
-# 
-# # Randomized Search CV
-# kfold = KFold(n_splits=5, shuffle=True, random_state=42)
-# 
-# random_search_rf = RandomizedSearchCV(
-#     estimator=rf_classifier,
-#     param_distributions=param_dist_rf,
-#     n_iter=100,
-#     cv=kfold,
-#     n_jobs=-1,
-#     verbose=2,
-#     scoring='f1',
-#     random_state=42
-# )
-# 
-# # fitting on preprocessed training data
-# random_search_rf.fit(X_train, y_train)
-# 
-# print("best parameters:", random_search_rf.best_params_)
-# print("best cross-validation score:", random_search_rf.best_score_)
-# 
-# # use the best model for predictions
-# best_model = random_search_rf.best_estimator_
-# y_val_pred = best_model.predict(X_val)
-# 
-# # print classification report
-# print("\nvalidation set classification report:")
-# print(classification_report(y_val, y_val_pred))
+%%time
+X_train, X_val, X_test, y_train, y_val, y_test, preprocessor = prepare_data()
+
+# Random Forest
+rf_classifier = RandomForestClassifier(random_state=42)
+
+param_dist_rf = {
+    'n_estimators': [100, 300, 500],
+    'max_depth': [3, 6, 9],
+    'min_samples_leaf': [1, 3],  # similar to min_child_weight
+    'max_features': [0.8, 1.0],  # similar to colsample_bytree
+    'bootstrap': [True, False],  # similar to subsample
+    'min_impurity_decrease': [0, 0.1]  # similar to gamma
+}
+
+# Randomized Search CV
+kfold = KFold(n_splits=5, shuffle=True, random_state=42)
+
+random_search_rf = RandomizedSearchCV(
+    estimator=rf_classifier,
+    param_distributions=param_dist_rf,
+    n_iter=100,
+    cv=kfold,
+    n_jobs=-1,
+    verbose=2,
+    scoring='f1',
+    random_state=42
+)
+
+# fitting on preprocessed training data
+random_search_rf.fit(X_train, y_train)
+
+print("best parameters:", random_search_rf.best_params_)
+print("best cross-validation score:", random_search_rf.best_score_)
+
+# use the best model for predictions
+best_model = random_search_rf.best_estimator_
+y_val_pred = best_model.predict(X_val)
+
+# print classification report
+print("\nvalidation set classification report:")
+print(classification_report(y_val, y_val_pred))
 
 """### ROC AUC"""
 
